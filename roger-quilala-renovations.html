@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roger Quilala Renovations — Another Day, Another Job</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plywood:#241f1b;
+    --plywood-2:#2e2822;
+    --paper:#efe7d4;
+    --paper-dim:#c9bfa8;
+    --tape:#e8b23d;
+    --tape-dark:#c4922a;
+    --rust:#b1492f;
+    --steel:#5a7078;
+    --line:rgba(239,231,212,0.14);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--plywood);
+    color:var(--paper);
+    font-family:'Source Sans 3', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.eyebrow,nav a,.btn,.tag{font-family:'Oswald', sans-serif; letter-spacing:0.02em;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px;}
+
+  /* ---- Ruler / tape motif ---- */
+  .ruler{
+    height:22px;
+    width:100%;
+    background:var(--tape);
+    position:relative;
+    overflow:hidden;
+    flex:0 0 auto;
+  }
+  .ruler svg{display:block; width:100%; height:100%;}
+
+  /* ---- Header ---- */
+  header{position:sticky; top:0; z-index:50; background:var(--plywood); border-bottom:1px solid var(--line);}
+  .nav-row{display:flex; align-items:center; justify-content:space-between; padding:16px 0;}
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none;}
+  .brand-mark{
+    width:38px; height:38px; border:2px solid var(--tape); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-weight:700; font-size:14px; color:var(--tape);
+    flex:0 0 auto;
+  }
+  .brand-text{font-size:19px; font-weight:600; color:var(--paper); text-transform:uppercase;}
+  .brand-text span{color:var(--tape);}
+  nav.links{display:flex; gap:28px; align-items:center;}
+  nav.links a{
+    font-size:14px; text-transform:uppercase; text-decoration:none; color:var(--paper-dim);
+    padding:6px 0; border-bottom:2px solid transparent;
+  }
+  nav.links a:hover{color:var(--paper); border-bottom-color:var(--tape);}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 22px; text-decoration:none; text-transform:uppercase; font-size:13px; font-weight:600;
+    border-radius:var(--radius); border:2px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--tape); color:#221c14;}
+  .btn-primary:hover{background:var(--tape-dark);}
+  .btn-outline{border-color:var(--paper-dim); color:var(--paper);}
+  .btn-outline:hover{border-color:var(--paper);}
+  .btn-fb{background:#3d5a8a; color:#fff;}
+  .btn-fb:hover{background:#324b74;}
+  .menu-toggle{
+    display:none;
+    background:none; border:none; cursor:pointer; padding:6px; color:var(--paper);
+    flex-direction:column; gap:5px; align-items:flex-end;
+  }
+  .menu-toggle span{
+    display:block; height:2px; background:var(--paper); border-radius:1px;
+    transition:transform 0.25s, opacity 0.25s, width 0.25s;
+  }
+  .menu-toggle span:nth-child(1){width:24px;}
+  .menu-toggle span:nth-child(2){width:18px;}
+  .menu-toggle span:nth-child(3){width:24px;}
+  .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg); width:24px;}
+  .menu-toggle.open span:nth-child(2){opacity:0; width:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg); width:24px;}
+
+  nav.links.mobile-open{
+    display:flex; flex-direction:column; gap:0;
+    position:absolute; top:100%; left:0; right:0;
+    background:var(--plywood); border-bottom:1px solid var(--line); padding:10px 24px 18px; z-index:49;
+  }
+  nav.links.mobile-open a{padding:13px 0; border-bottom:1px solid var(--line); font-size:16px;}
+  nav.links a.active{color:var(--paper); border-bottom-color:var(--tape);}
+
+  /* ---- Scroll-reveal ---- */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity 0.55s ease, transform 0.55s ease;}
+  .reveal.visible{opacity:1; transform:none;}
+
+  /* ---- Form success ---- */
+  .form-success{
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px;
+    text-align:center; padding:40px 20px; border:1px solid var(--tape); border-radius:4px;
+    background:var(--plywood-2); color:var(--paper);
+  }
+  .form-success.show{display:flex;}
+  .form-success .checkmark{
+    width:52px; height:52px; border-radius:50%; background:var(--tape);
+    display:flex; align-items:center; justify-content:center; font-size:24px; color:#221c14; flex:0 0 auto;
+  }
+  .form-success h4{margin:0; font-size:20px; text-transform:uppercase;}
+  .form-success p{margin:0; color:var(--paper-dim); font-size:14.5px;}
+
+  /* ---- Hero ---- */
+  .hero{
+    padding:88px 0 70px;
+    position:relative;
+    background:
+      radial-gradient(ellipse at 80% 0%, rgba(232,178,61,0.10), transparent 55%),
+      var(--plywood);
+  }
+  .hero-grid{display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:13px; text-transform:uppercase; color:var(--tape); font-weight:600;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{content:""; width:22px; height:2px; background:var(--tape);}
+  .hero h1{
+    font-size:clamp(38px, 5.2vw, 64px); line-height:1.03; margin:0 0 20px; color:var(--paper);
+    text-transform:uppercase; font-weight:700;
+  }
+  .hero h1 em{font-style:normal; color:var(--tape);}
+  .hero p.lead{font-size:18px; color:var(--paper-dim); max-width:46ch; margin:0 0 32px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+
+  .level{
+    background:var(--plywood-2); border:1px solid var(--line); border-radius:4px; padding:22px;
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .level-row{display:flex; align-items:center; gap:14px;}
+  .bubble-track{
+    flex:1; height:26px; background:#1b1713; border-radius:13px; position:relative; overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .bubble-track::before{content:""; position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--rust);}
+  .bubble{
+    position:absolute; top:3px; left:50%; transform:translateX(-46%);
+    width:20px; height:20px; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff6da, var(--tape) 60%, var(--tape-dark));
+  }
+  .level-label{font-size:12px; text-transform:uppercase; color:var(--paper-dim); width:118px; flex:0 0 auto;}
+  .stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; border-top:1px solid var(--line); padding-top:18px;}
+  .stat{text-align:left;}
+  .stat b{display:block; font-family:'JetBrains Mono',monospace; font-size:24px; color:var(--tape);}
+  .stat span{font-size:12px; color:var(--paper-dim); text-transform:uppercase;}
+
+  /* ---- Section shell ---- */
+  section{padding:78px 0;}
+  .section-head{max-width:640px; margin:0 0 44px;}
+  .section-head .eyebrow{margin-bottom:14px;}
+  .section-head h2{font-size:clamp(28px,3.6vw,40px); margin:0 0 12px; text-transform:uppercase; color:var(--paper);}
+  .section-head p{color:var(--paper-dim); font-size:16px; margin:0;}
+  .alt{background:var(--plywood-2); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+
+  /* ---- About ---- */
+  .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:52px; align-items:center;}
+  .about-photo{
+    aspect-ratio:4/5; border-radius:4px; border:1px solid var(--line);
+    background:
+      repeating-linear-gradient(135deg, rgba(239,231,212,0.05) 0px, rgba(239,231,212,0.05) 2px, transparent 2px, transparent 14px),
+      linear-gradient(160deg, #3a3129, #201b17);
+    display:flex; align-items:center; justify-content:center; color:var(--paper-dim); font-size:13px;
+    text-align:center; padding:20px; text-transform:uppercase; letter-spacing:0.06em;
+    overflow:hidden;
+  }
+  .about-photo img{width:100%; height:100%; object-fit:cover; object-position:top center;}
+  .about-copy p{color:var(--paper-dim); font-size:16px;}
+  .about-copy p strong{color:var(--paper);}
+  .badge-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:22px;}
+  .badge{
+    border:1px solid var(--line); border-radius:20px; padding:8px 16px; font-size:13px; color:var(--paper-dim);
+  }
+
+  /* ---- Services ---- */
+  .service-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--line);}
+  .service-card{background:var(--plywood); padding:30px 26px; }
+  .service-num{font-family:'JetBrains Mono',monospace; color:var(--tape); font-size:13px; margin-bottom:14px; display:block;}
+  .service-card h3{margin:0 0 10px; font-size:19px; text-transform:uppercase; color:var(--paper);}
+  .service-card p{margin:0; color:var(--paper-dim); font-size:14.5px;}
+
+  /* ---- DIY Tips ---- */
+  .tips-top{display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;}
+  .tip-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:36px;}
+  .tip-card{
+    border:1px solid var(--line); border-radius:4px; padding:22px 20px; background:var(--plywood-2);
+    display:flex; flex-direction:column; gap:12px; min-height:190px;
+  }
+  .tip-tag{font-size:11px; text-transform:uppercase; color:var(--tape); letter-spacing:0.08em;}
+  .tip-card h4{margin:0; font-size:16px; color:var(--paper); text-transform:none; font-family:'Source Sans 3',sans-serif; font-weight:600;}
+  .tip-card p{margin:0; font-size:13.5px; color:var(--paper-dim); flex:1;}
+  .tip-card .tip-link{font-size:12.5px; color:var(--paper-dim); text-decoration:none; border-top:1px solid var(--line); padding-top:12px; margin-top:auto;}
+  .tip-card .tip-link:hover{color:var(--tape);}
+
+  .feature-video{
+    display:grid; grid-template-columns:0.6fr 1fr; gap:32px; align-items:center;
+    background:var(--plywood-2); border:1px solid var(--line); border-radius:4px; padding:24px;
+    margin-bottom:40px;
+  }
+  .feature-video-embed{
+    position:relative; width:100%; max-width:280px; margin:0 auto;
+    aspect-ratio:9/16; border-radius:4px; overflow:hidden; border:1px solid var(--line); background:#151210;
+  }
+  .feature-video-embed iframe{width:100%; height:100%; border:0;}
+  .feature-video-copy .eyebrow{margin-bottom:12px;}
+  .feature-video-copy h3{margin:0 0 12px; font-size:22px; text-transform:none; font-family:'Source Sans 3',sans-serif; font-weight:600; color:var(--paper);}
+  .feature-video-copy p{color:var(--paper-dim); font-size:15px; margin:0 0 20px;}
+  @media (max-width:800px){
+    .feature-video{grid-template-columns:1fr;}
+  }
+
+  /* ---- Gallery ---- */
+  .gallery-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .gallery-item{
+    aspect-ratio:1/1; border-radius:4px; border:1px solid var(--line);
+    position:relative; overflow:hidden; background:#201b17;
+  }
+  .gallery-item img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    transition:transform 0.45s ease;
+  }
+  .gallery-item:hover img{transform:scale(1.06);}
+  .gallery-caption{
+    position:absolute; bottom:0; left:0; right:0;
+    padding:28px 14px 14px;
+    background:linear-gradient(to top, rgba(20,15,10,0.82) 0%, transparent 100%);
+    font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--paper);
+    font-family:'Oswald', sans-serif; font-weight:500;
+  }
+
+  /* ---- Testimonials ---- */
+  .testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .testi-card{border:1px solid var(--line); border-radius:4px; padding:26px; background:var(--plywood-2);}
+  .testi-card p{font-size:15px; color:var(--paper); margin:0 0 16px;}
+  .testi-name{font-size:13px; color:var(--paper-dim); text-transform:uppercase;}
+
+  /* ---- Contact / Booking ---- */
+  .contact-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:50px;}
+  .contact-info h3{text-transform:uppercase; font-size:18px; margin:0 0 18px; color:var(--paper);}
+  .info-row{display:flex; gap:14px; margin-bottom:16px; align-items:flex-start;}
+  .info-row .k{width:26px; height:26px; border:1px solid var(--tape); border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center; color:var(--tape); font-size:12px; font-family:'JetBrains Mono',monospace;}
+  .info-row .v{color:var(--paper-dim); font-size:14.5px;}
+  .info-row .v b{display:block; color:var(--paper); font-size:15px; font-weight:600;}
+
+  form{background:var(--plywood-2); border:1px solid var(--line); border-radius:4px; padding:30px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:12.5px; text-transform:uppercase; letter-spacing:0.04em; color:var(--paper-dim);}
+  input, select, textarea{
+    background:#1b1713; border:1px solid var(--line); border-radius:3px; padding:11px 12px;
+    color:var(--paper); font-family:'Source Sans 3',sans-serif; font-size:14.5px;
+  }
+  input:focus, select:focus, textarea:focus{outline:2px solid var(--tape); outline-offset:1px;}
+  textarea{resize:vertical; min-height:90px;}
+  .form-note{font-size:12.5px; color:var(--paper-dim); margin-top:14px;}
+
+  footer{border-top:1px solid var(--line); padding:40px 0 30px;}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  .footer-row .brand-text{font-size:15px;}
+  .foot-links{display:flex; gap:20px;}
+  .foot-links a{font-size:13px; color:var(--paper-dim); text-decoration:none;}
+  .foot-links a:hover{color:var(--tape);}
+  .copyright{font-size:12.5px; color:var(--paper-dim); margin-top:18px;}
+
+  @media (max-width:900px){
+    .hero-grid, .about-grid, .contact-grid{grid-template-columns:1fr;}
+    .service-grid{grid-template-columns:1fr 1fr;}
+    .tip-grid{grid-template-columns:1fr 1fr;}
+    .gallery-grid, .testi-grid{grid-template-columns:1fr 1fr;}
+    nav.links{display:none;}
+    nav.links.mobile-open{display:flex;}
+    .menu-toggle{display:flex;}
+    #headerCta{display:none !important;}
+    .form-row{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .service-grid, .tip-grid, .gallery-grid, .testi-grid{grid-template-columns:1fr;}
+    .hero-actions{flex-direction:column; align-items:stretch;}
+    .hero-actions .btn{justify-content:center;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ruler" aria-hidden="true">
+  <svg preserveAspectRatio="none" viewBox="0 0 1000 22">
+    <rect width="1000" height="22" fill="#e8b23d"/>
+    <g stroke="#241f1b" stroke-width="1.4">
+      <!-- generated ticks -->
+      <g id="ticks"></g>
+    </g>
+  </svg>
+</div>
+
+<header>
+  <div class="wrap nav-row">
+    <a class="brand" href="#top">
+      <span class="brand-mark mono">RQ</span>
+      <span class="brand-text">Roger Quilala <span>Renovations</span></span>
+    </a>
+    <nav class="links" id="mainNav">
+      <a href="#services">Services</a>
+      <a href="#diy-tips">DIY Tips</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn btn-primary" href="#contact" id="headerCta">Book an Estimate</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Home Renovation &amp; Repair</div>
+      <h1>Another day.<br><em>Another job.</em></h1>
+      <p class="lead">Kitchens, bathrooms, basements and everyday fixes — done right the first time. Roger Quilala brings 15+ years on the tools to homes across the Greater Toronto Area, and shares the tricks of the trade every week on Facebook.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#contact">Book a Free Estimate</a>
+        <a class="btn btn-fb" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Message on Facebook</a>
+        <a class="btn btn-outline" href="#diy-tips">See DIY Tips</a>
+      </div>
+    </div>
+    <div class="level">
+      <div class="level-row">
+        <span class="level-label">On the level</span>
+        <div class="bubble-track"><div class="bubble"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b>15+</b><span>Years on the tools</span></div>
+        <div class="stat"><b>200+</b><span>Projects finished</span></div>
+        <div class="stat"><b>5.0</b><span>Avg. client rating*</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-photo"><img src="rogerphoto.jpg" alt="Roger Quilala"></div>
+    <div class="about-copy">
+      <div class="eyebrow">The guy behind the toolbelt</div>
+      <h2 style="text-transform:uppercase; font-size:clamp(26px,3vw,34px); margin:0 0 16px;">Hi, I'm Roger.</h2>
+      <p><strong>I've spent my career renovating homes</strong> the way I'd want mine done — solid materials, honest timelines, and no shortcuts you can't see. Whether it's a full kitchen tear-out or a squeaky floor that's driven you crazy for years, I treat every job the same: measure twice, cut once.</p>
+      <p>Outside of job sites, I post practical DIY tips on Facebook for homeowners who want to tackle small stuff themselves — and know when it's time to call a pro.</p>
+      <div class="badge-row">
+        <span class="badge">Licensed &amp; Insured*</span>
+        <span class="badge">Free On-Site Estimates</span>
+        <span class="badge">GTA &amp; Surrounding Areas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What I Build &amp; Fix</div>
+      <h2>Services</h2>
+      <p>From full remodels to the small repairs that keep a house running smoothly.</p>
+    </div>
+    <div class="service-grid">
+      <div class="service-card reveal"><span class="service-num mono">01</span><h3>Kitchen Remodels</h3><p>Cabinets, counters, backsplash and layout changes that make the room work for how you actually cook.</p></div>
+      <div class="service-card reveal"><span class="service-num mono">02</span><h3>Bathroom Renovations</h3><p>Tile, vanities, tubs and showers — watertight work that lasts, not just looks good on install day.</p></div>
+      <div class="service-card reveal"><span class="service-num mono">03</span><h3>Basement Finishing</h3><p>Turn unused square footage into a livable space, built to code with proper insulation and moisture control.</p></div>
+      <div class="service-card reveal"><span class="service-num mono">04</span><h3>Flooring &amp; Tile</h3><p>Hardwood, laminate, vinyl plank and tile installation with clean transitions and tight seams.</p></div>
+      <div class="service-card reveal"><span class="service-num mono">05</span><h3>Drywall, Paint &amp; Trim</h3><p>Patch, skim, paint and finish carpentry that makes a room look freshly built, not just freshly painted.</p></div>
+      <div class="service-card reveal"><span class="service-num mono">06</span><h3>Handyman &amp; Small Repairs</h3><p>Doors that stick, leaky faucets, loose railings — the small jobs that are easy to keep putting off.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="diy-tips">
+  <div class="wrap">
+    <div class="tips-top">
+      <div class="section-head" style="margin-bottom:0;">
+        <div class="eyebrow">From the Facebook Page</div>
+        <h2>DIY Tips</h2>
+        <p>A few of the tricks Roger shares with followers — real posts should replace these once connected.</p>
+      </div>
+      <a class="btn btn-fb" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Follow for More Tips</a>
+    </div>
+
+    <div class="feature-video">
+      <div class="feature-video-embed">
+        <iframe src="https://www.facebook.com/plugins/video.php?height=476&amp;href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1390450132923107%2F&amp;show_text=false&amp;width=267&amp;t=0"
+          width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0"
+          allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          title="Roger Quilala DIY tip: kitchen faucet installation"></iframe>
+      </div>
+      <div class="feature-video-copy">
+        <div class="eyebrow">Straight From Facebook</div>
+        <h3>DIY Tip: Kitchen Faucet Installation</h3>
+        <p>Roger walks through a real faucet swap, step by step — one of his most-watched Facebook reels. Tap play to watch it right here, or open it on Facebook.</p>
+        <a class="btn btn-fb" href="https://www.facebook.com/reel/1390450132923107" target="_blank" rel="noopener">Watch on Facebook</a>
+      </div>
+    </div>
+
+    <div class="tip-grid">
+      <div class="tip-card reveal">
+        <span class="tip-tag">Painting</span>
+        <h4>Cutting in a clean line</h4>
+        <p>Tape the edge, then seal it with a thin coat of the base colour before your real coat — bleed-through stops before it starts.</p>
+        <a class="tip-link" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Read the full tip →</a>
+      </div>
+      <div class="tip-card reveal">
+        <span class="tip-tag">Flooring</span>
+        <h4>Quieting a squeaky floor</h4>
+        <p>Most squeaks come from a subfloor gap, not the boards themselves. A quick screw from below often fixes it for good.</p>
+        <a class="tip-link" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Read the full tip →</a>
+      </div>
+      <div class="tip-card reveal">
+        <span class="tip-tag">Caulking</span>
+        <h4>A bead that actually lasts</h4>
+        <p>Cheap caulk fails at the corners first. Spend a little more on a paintable silicone-hybrid and it'll outlast the job by years.</p>
+        <a class="tip-link" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Read the full tip →</a>
+      </div>
+      <div class="tip-card reveal">
+        <span class="tip-tag">Tool Talk</span>
+        <h4>One tool worth owning</h4>
+        <p>A cheap laser level saves more re-work than almost anything else in the truck — worth it even for a one-off project.</p>
+        <a class="tip-link" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Read the full tip →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" class="alt">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Recent Work</div>
+      <h2>Gallery</h2>
+      <p>A look at the kinds of projects Roger takes on across the GTA.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=600&q=80" alt="Kitchen remodel — modern white kitchen with new countertops" loading="lazy">
+        <span class="gallery-caption">Kitchen Remodel</span>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=600&q=80" alt="Bathroom renovation with new tile and vanity" loading="lazy">
+        <span class="gallery-caption">Bathroom Renovation</span>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80" alt="Finished basement with drywall and lighting" loading="lazy">
+        <span class="gallery-caption">Basement Finishing</span>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" alt="New deck build — outdoor wood deck" loading="lazy">
+        <span class="gallery-caption">Deck Build</span>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?auto=format&fit=crop&w=600&q=80" alt="Hardwood flooring installation" loading="lazy">
+        <span class="gallery-caption">Flooring Install</span>
+      </div>
+      <div class="gallery-item reveal">
+        <img src="https://images.unsplash.com/photo-1562438668-bcf0ca6578f0?auto=format&fit=crop&w=600&q=80" alt="Fresh paint and trim work" loading="lazy">
+        <span class="gallery-caption">Trim &amp; Paint</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Client Feedback</div>
+      <h2>What clients say</h2>
+      <p>Sample layout — replace with real reviews from past clients.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal"><p>"Showed up on time, quoted a fair price, and the finished bathroom looks better than we imagined."</p><div class="testi-name">— Sample Review, Ajax</div></div>
+      <div class="testi-card reveal"><p>"Our basement went from storage dump to the best room in the house. Clean work, no mess left behind."</p><div class="testi-name">— Sample Review, Whitby</div></div>
+      <div class="testi-card reveal"><p>"Fixed three small things around the house in one visit. Straightforward and honest about what needed doing."</p><div class="testi-name">— Sample Review, Oshawa</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="alt">
+  <div class="wrap contact-grid">
+    <div class="contact-info">
+      <div class="eyebrow">Get In Touch</div>
+      <h3>Book a free estimate</h3>
+      <div class="info-row"><span class="k mono">P</span><div class="v"><b>[Your Phone Number]</b>Call or text</div></div>
+      <div class="info-row"><span class="k mono">E</span><div class="v"><b>[your.email@example.com]</b>Usually replies same day</div></div>
+      <div class="info-row"><span class="k mono">A</span><div class="v"><b>Greater Toronto Area</b>Serving surrounding communities</div></div>
+      <div class="info-row"><span class="k mono">F</span><div class="v"><b><a href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener" style="color:inherit;">facebook.com/roger.quilala.44448</a></b>Fastest way to message directly</div></div>
+      <a class="btn btn-fb" style="margin-top:10px;" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Message on Facebook</a>
+    </div>
+
+    <div class="form-success" id="formSuccess" role="alert">
+      <div class="checkmark">✓</div>
+      <h4>Request Sent!</h4>
+      <p>Roger will be in touch soon. You can also message directly on Facebook for the fastest reply.</p>
+      <a class="btn btn-fb" href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Message on Facebook</a>
+    </div>
+    <form id="bookingForm">
+      <div class="form-row">
+        <div class="field"><label for="name">Full Name</label><input id="name" name="name" type="text" required></div>
+        <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+        <div class="field"><label for="service">Service Needed</label>
+          <select id="service" name="service">
+            <option>Kitchen Remodel</option>
+            <option>Bathroom Renovation</option>
+            <option>Basement Finishing</option>
+            <option>Flooring &amp; Tile</option>
+            <option>Drywall / Paint / Trim</option>
+            <option>Handyman / Small Repair</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field full"><label for="date">Preferred Date (optional)</label><input id="date" name="date" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="field full"><label for="message">Tell me about the project</label><textarea id="message" name="message" placeholder="Room size, what needs doing, timeline..."></textarea></div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Request Appointment</button>
+      <p class="form-note">Submitting opens an email to Roger with your details pre-filled. To collect requests directly into an inbox without opening the visitor's email app, connect this form to a service like Formspree — I can wire that up if you'd like.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <a class="brand" href="#top">
+        <span class="brand-mark mono">RQ</span>
+        <span class="brand-text">Roger Quilala <span>Renovations</span></span>
+      </a>
+      <div class="foot-links">
+        <a href="#services">Services</a>
+        <a href="#diy-tips">DIY Tips</a>
+        <a href="#gallery">Gallery</a>
+        <a href="https://www.facebook.com/roger.quilala.44448" target="_blank" rel="noopener">Facebook</a>
+      </div>
+    </div>
+    <p class="copyright">© <span id="year"></span> Roger Quilala Renovations. All rights reserved. "Another day, another job." · *Sample stats/credentials — replace with real figures.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Build ruler ticks
+  (function(){
+    const ticks = document.getElementById('ticks');
+    let svgMarkup = '';
+    for(let x = 0; x <= 1000; x += 10){
+      const isMajor = x % 50 === 0;
+      const h = isMajor ? 12 : 6;
+      svgMarkup += `<line x1="${x}" y1="22" x2="${x}" y2="${22-h}"></line>`;
+    }
+    ticks.innerHTML = svgMarkup;
+  })();
+
+  // Mobile hamburger menu
+  (function(){
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    if(!toggle || !nav) return;
+
+    toggle.addEventListener('click', function(){
+      const isOpen = nav.classList.toggle('mobile-open');
+      toggle.classList.toggle('open', isOpen);
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Close menu when a nav link is tapped
+    nav.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        nav.classList.remove('mobile-open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function(e){
+      if(!nav.contains(e.target) && !toggle.contains(e.target)){
+        nav.classList.remove('mobile-open');
+        toggle.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+
+  // Scroll-spy: highlight active section in nav
+  (function(){
+    const sections = Array.from(document.querySelectorAll('section[id]'));
+    const links = Array.from(document.querySelectorAll('#mainNav a'));
+    if(!sections.length || !links.length) return;
+
+    function onScroll(){
+      const scrollY = window.scrollY + 120;
+      let current = '';
+      sections.forEach(function(sec){
+        if(sec.offsetTop <= scrollY) current = sec.id;
+      });
+      links.forEach(function(a){
+        const href = a.getAttribute('href').replace('#','');
+        a.classList.toggle('active', href === current);
+      });
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  })();
+
+  // Scroll-reveal for .reveal elements
+  (function(){
+    const els = document.querySelectorAll('.reveal');
+    if(!els.length || !('IntersectionObserver' in window)) {
+      // Fallback: show all immediately
+      els.forEach(function(el){ el.classList.add('visible'); });
+      return;
+    }
+    const obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.12});
+    els.forEach(function(el){ obs.observe(el); });
+  })();
+
+  // Booking form -> mailto fallback (no backend attached)
+  document.getElementById('bookingForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const subject = encodeURIComponent('Renovation Appointment Request from ' + data.get('name'));
+    const body = encodeURIComponent(
+      'Name: ' + data.get('name') + '\n' +
+      'Phone: ' + data.get('phone') + '\n' +
+      'Email: ' + data.get('email') + '\n' +
+      'Service: ' + data.get('service') + '\n' +
+      'Preferred Date: ' + (data.get('date') || 'Not specified') + '\n\n' +
+      'Details:\n' + data.get('message')
+    );
+    // Show success state first
+    e.target.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+    // Then open mailto
+    window.location.href = 'mailto:your.email@example.com?subject=' + subject + '&body=' + body;
+  });
+</script>
+
+</body>
+</html>
