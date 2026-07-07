@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — Roger Quilala Renovations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=JetBrains+Mono:wght@700&family=Source+Sans+3:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plywood:#241f1b; --paper:#efe7d4; --paper-dim:#c9bfa8;
+    --tape:#e8b23d; --tape-dark:#c4922a; --line:rgba(239,231,212,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--plywood); color:var(--paper);
+    font-family:'Source Sans 3', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:40px 24px; text-align:center;
+  }
+  .tape-bar{position:fixed; top:0; left:0; right:0; height:6px; background:var(--tape);}
+  .code{
+    font-family:'JetBrains Mono', monospace; font-size:clamp(72px,15vw,120px);
+    font-weight:700; color:var(--tape); line-height:1; margin-bottom:20px;
+    text-shadow:4px 4px 0 var(--tape-dark);
+  }
+  h1{font-family:'Oswald', sans-serif; text-transform:uppercase; font-size:clamp(22px,4vw,34px); margin-bottom:14px; color:var(--paper);}
+  p{color:var(--paper-dim); font-size:16px; max-width:40ch; margin:0 auto 32px;}
+  .actions{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:11px 24px; text-decoration:none; text-transform:uppercase;
+    font-family:'Oswald', sans-serif; font-size:13px; font-weight:600; letter-spacing:.03em;
+    border-radius:2px; border:2px solid transparent;
+  }
+  .btn-primary{background:var(--tape); color:#221c14;}
+  .btn-primary:hover{background:var(--tape-dark);}
+  .btn-outline{border-color:var(--paper-dim); color:var(--paper);}
+  .btn-outline:hover{border-color:var(--paper);}
+</style>
+</head>
+<body>
+  <div class="tape-bar"></div>
+  <div class="code">404</div>
+  <h1>Page not found</h1>
+  <p>Looks like that page got knocked down during the reno. Let's get you back on the level.</p>
+  <div class="actions">
+    <a class="btn btn-primary" href="/">Back to Home</a>
+    <a class="btn btn-outline" href="/#contact">Book an Estimate</a>
+  </div>
+</body>
+</html>
